@@ -1,0 +1,16 @@
+schema:
+  - https://localhost:7000/graph:
+      headers:
+        # Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJNT05KQVNBXFxqZHUiLCJleHAiOjE2NjgxNTgwODEsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwMDAiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDozMDAwIn0.O_N4GpIXMv42bPTJCA_JtW5IkPonCHIt7ThP1vV1N7Y"
+documents: "src/Apollo/Graph/**/*.gql"
+generates:
+  src/Apollo/Graph/index.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      fetcher: fetch
+      withHooks: true
+      withMutationFn: true
+      withRefetchFn: true

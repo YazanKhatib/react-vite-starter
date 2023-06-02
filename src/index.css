@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  input[type='text']::placeholder {
+    @apply font-opensans text-gra;
+  }
+
+  #root {
+    @apply h-screen w-screen bg-background;
+  }
+}
