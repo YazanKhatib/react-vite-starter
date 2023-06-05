@@ -1,44 +1,56 @@
-#!/usr/bin/env node
+#! /usr/bin/env node
 
-// Usage: npx create-my-template my-app
-
-const spawn = require('cross-spawn');
-const fs = require('fs');
+const { execSync } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
-// The first argument will be the project name.
+if (process.argv.length < 3) {
+    console.log('Provide a name for your app');
+    console.log('For example :');
+    console.log('    npx react-vite-starter my-app');
+    process.exit(1);
+}
+
 const projectName = process.argv[2];
+const currentPath = process.cwd();
+const projectPath = path.join(currentPath, projectName);
+const GIT_REPO = 'https://github.com/YazanKhatib/react-vite-starter.git';
 
-// Create a project directory with the project name.
-const currentDir = process.cwd();
-const projectDir = path.resolve(currentDir, projectName);
-fs.mkdirSync(projectDir, { recursive: true });
+if (projectName !== '.') {
+    try {
+        fs.mkdirSync(projectPath);
+    } catch (err) {
+        if (err.code === 'EEXIST') {
+            console.log(projectName);
+            console.log(`The file ${projectName} already exist in the current directory, please give it another name.`);
+        } else {
+            console.log(err);
+        }
+        process.exit(1);
+    }
+}
 
-// A common approach to building a starter template is to
-// create a `template` folder which will house the template
-// and the files we want to create.
-const templateDir = path.resolve(__dirname, 'template');
-fs.cpSync(templateDir, projectDir, { recursive: true });
+async function main() {
+    try {
+        console.log('Downloading files...');
+        execSync(`git clone --depth 1 ${GIT_REPO} ${projectPath}`);
 
-// It is good practice to have dotfiles stored in the
-// template without the dot (so they do not get picked
-// up by the starter template repository). We can rename
-// the dotfiles after we have copied them over to the
-// new project directory.
-fs.renameSync(path.join(projectDir, 'gitignore'), path.join(projectDir, '.gitignore'));
+        if (projectName !== '.') {
+            process.chdir(projectPath);
+        }
 
-const projectPackageJson = require(path.join(projectDir, 'package.json'));
+        console.log('Installing dependencies...');
+        execSync('yarn install');
 
-// Update the project's package.json with the new project name
-projectPackageJson.name = projectName;
+        console.log('Removing useless files');
+        execSync('npx rimraf ./.git');
+        execSync('npx rimraf ./bin');
+        execSync('npx rimraf ./.github/workflows');
 
-fs.writeFileSync(path.join(projectDir, 'package.json'), JSON.stringify(projectPackageJson, null, 2));
+        console.log('The installation is successful 🚀');
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-// Run `npm install` in the project directory to install
-// the dependencies. We are using a third-party library
-// called `cross-spawn` for cross-platform support.
-// (Node has issues spawning child processes in Windows).
-spawn.sync('npm', ['install'], { stdio: 'inherit' });
-
-console.log('Success! Your new project is ready.');
-console.log(`Created ${projectName} at ${projectDir}`);
+main();
