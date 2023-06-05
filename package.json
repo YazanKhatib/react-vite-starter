@@ -1,8 +1,8 @@
 {
-    "name": "react-vite-starter",
+    "name": "@relateit/react-vite-starter",
     "private": false,
     "version": "0.0.1",
-    "type": "module",
+    "type": "commonjs",
     "bin": "./bin/cli.js",
     "scripts": {
         "dev": "vite",
