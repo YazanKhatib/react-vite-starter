@@ -1,6 +1,6 @@
 {
     "name": "@relateit/react-vite-starter",
-    "private": true,
+    "private": false,
     "version": "0.0.0",
     "type": "module",
     "bin": "./bin/cli.js",
